@@ -19,8 +19,10 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Login failed');
+    const contentType = res.headers.get('content-type') || '';
+    const data = contentType.includes('application/json') ? await res.json() : null;
+    if (!res.ok) throw new Error(data?.message || `Server error (${res.status}). Please try again later.`);
+    if (!data) throw new Error('The server returned an unexpected response. Please try again later.');
     return data;
   },
 

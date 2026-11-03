@@ -40,6 +40,16 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error('Database unavailable:', error);
+    res.status(503).json({ message: 'Database unavailable. Please try again later.' });
+  }
+});
+
 // Mount Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/members', memberRoutes);
@@ -60,12 +70,18 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Connect DB and listen
+export default app;
+
 const PORT = process.env.PORT || 5000;
 
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`🌸 SakhiSetu API Server running on port ${PORT} [${process.env.NODE_ENV || 'development'}]`);
-    console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
+if (process.env.VERCEL !== '1') {
+  connectDB().then(() => {
+    app.listen(PORT, () => {
+      console.log(`🌸 SakhiSetu API Server running on port ${PORT} [${process.env.NODE_ENV || 'development'}]`);
+      console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
+    });
+  }).catch((error) => {
+    console.error('Unable to start server:', error);
+    process.exitCode = 1;
   });
-});
+}
