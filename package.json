@@ -1,0 +1,15 @@
+{
+  "name": "sakhisetu-root",
+  "version": "1.0.0",
+  "description": "SakhiSetu - Digital Management System for Mahila Bachat Gat (MERN)",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "npm --prefix backend run dev",
+    "client": "npm --prefix frontend run dev",
+    "seed": "npm --prefix backend run seed",
+    "install:all": "npm --prefix backend install && npm --prefix frontend install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
