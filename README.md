@@ -27,7 +27,7 @@
    - Upcoming public meetings & notices noticeboard
 2. **Secure Role-Based Authentication**
    - JWT tokens with protected routes and role verification (`admin` vs `member` vs `visitor`)
-   - 1-Click Academic Demo Login for examiners (`admin@sakhisetu.org` / `admin123`)
+   - Email/password login and public member registration
 3. **Dashboard (Home)**
    - Group overview (*Sakhi Mahila Bachat Gat, Shivaji Nagar, Pune*)
    - 4 Dynamic Stat Cards matching specifications:
@@ -70,13 +70,15 @@
 
 ---
 
-## 🔑 Demo Credentials (For Presentation & Evaluation)
+## 🔑 Demo Credentials (Development Only)
 
 | Role | Email | Password | Access Rights |
 | :--- | :--- | :--- | :--- |
-| **Group Leader (Admin)** | `admin@sakhisetu.org` | `admin123` | Full control (Add members, mark attendance, record savings, issue loans, manage products & notices) |
-| **Group Member** | `meera@sakhisetu.org` | `member123` | View group records, personal savings, products showcase, announcements |
+| **Group Leader (Admin)** | `admin@sakhisetu.org` | `admin123` | Created only by the development demo seed |
+| **Group Member** | `meera@sakhisetu.org` | `member123` | Created only by the development demo seed |
 | **Public Visitor** | *No login needed* | - | View public home, browse products, send WhatsApp inquiries |
+
+Demo credentials are not present in a new production database. The demo seed clears database collections and must never be run against production.
 
 ---
 
@@ -103,18 +105,26 @@ In `backend/.env`:
 ```env
 PORT=5000
 MONGODB_URI=mongodb://127.0.0.1:27017/sakhisetu
-JWT_SECRET=sakhi_setu_super_secure_jwt_secret_key_2026
+JWT_SECRET=replace-with-a-unique-random-secret
 NODE_ENV=development
 ```
 
+Use a unique, randomly generated `JWT_SECRET`; never use a sample value in production. Set both `MONGODB_URI` and `JWT_SECRET` in the Vercel backend project's Environment Variables. `MONGODB_URI` must point to the Atlas database used by production.
+
 ### 3. Seed Realistic Demo Data
-Populates the database with 20 members, ₹25,000 savings, ₹8,000 loans, meetings, and products:
+For local development only, this populates the database with 20 members, ₹25,000 savings, ₹8,000 loans, meetings, and products:
 ```bash
 cd backend
 npm run seed
 ```
+This command clears existing collections first. Use it only with a disposable development database, never with production data.
 
-### 4. Run Application
+### 4. Production Registration and Admin Setup
+Users can register from the production login page. Registration is sent to the deployed backend and stored in the production MongoDB Atlas database; every public registration receives the `member` role and is linked to a member record. Public registration is open, and signed-in members can access this group's records.
+
+To establish the initial administrator, register the intended account through the production site, then use MongoDB Atlas to change that user's `role` field from `member` to `admin` in the `users` collection. Do not expose an admin role selector on public registration.
+
+### 5. Run Application
 Run the backend and frontend:
 ```bash
 # Terminal 1: Backend Server

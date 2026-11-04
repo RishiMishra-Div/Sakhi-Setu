@@ -11,6 +11,7 @@ import { MobileNav } from './components/MobileNav';
 // Pages
 import { PublicHome } from './pages/PublicHome';
 import { Login } from './pages/Login';
+import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
 import { Members } from './pages/Members';
 import { Meetings } from './pages/Meetings';
@@ -34,7 +35,7 @@ export default function App() {
 
   // Sync tab with auth changes
   useEffect(() => {
-    if (isAuthenticated && currentTab === 'login') {
+    if (isAuthenticated && ['login', 'register'].includes(currentTab)) {
       setCurrentTab('dashboard');
     }
   }, [isAuthenticated]);
@@ -65,6 +66,15 @@ export default function App() {
           <Login
             onLoginSuccess={() => setCurrentTab('dashboard')}
             onBackToHome={() => setCurrentTab('public')}
+            onNavigateRegister={() => setCurrentTab('register')}
+          />
+        );
+      case 'register':
+        return (
+          <Register
+            onRegisterSuccess={() => setCurrentTab('dashboard')}
+            onBackToHome={() => setCurrentTab('public')}
+            onNavigateLogin={() => setCurrentTab('login')}
           />
         );
       case 'dashboard':

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Eye, EyeOff, Lock, Mail, ArrowLeft, Sparkles } from 'lucide-react';
+import { ShieldCheck, Eye, EyeOff, Lock, Mail, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 
-export const Login = ({ onLoginSuccess, onBackToHome }) => {
+export const Login = ({ onLoginSuccess, onBackToHome, onNavigateRegister }) => {
   const { login } = useAuth();
   const { t } = useLanguage();
 
-  const [email, setEmail] = useState('admin@sakhisetu.org');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -26,17 +26,6 @@ export const Login = ({ onLoginSuccess, onBackToHome }) => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleDemoFill = (type) => {
-    if (type === 'admin') {
-      setEmail('admin@sakhisetu.org');
-      setPassword('admin123');
-    } else {
-      setEmail('meera@sakhisetu.org');
-      setPassword('member123');
-    }
-    setError('');
   };
 
   return (
@@ -71,32 +60,6 @@ export const Login = ({ onLoginSuccess, onBackToHome }) => {
             </div>
           )}
 
-          {/* Academic Demo Auto-fill Helper */}
-          <div style={{ background: '#f8faf7', border: '1px dashed #86efac', padding: '12px', borderRadius: '10px', marginBottom: '20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', fontWeight: 700, color: '#15803d', marginBottom: '8px' }}>
-              <Sparkles size={14} color="#f59e0b" />
-              <span>{t('demoAccountsTitle')}</span>
-            </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                style={{ flex: 1, fontSize: '0.75rem', borderColor: '#bbf7d0', background: email === 'admin@sakhisetu.org' ? '#dcfce7' : 'white' }}
-                onClick={() => handleDemoFill('admin')}
-              >
-                {t('demoAdminBtn')}
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                style={{ flex: 1, fontSize: '0.75rem', borderColor: '#bbf7d0', background: email === 'meera@sakhisetu.org' ? '#dcfce7' : 'white' }}
-                onClick={() => handleDemoFill('member')}
-              >
-                {t('demoMemberBtn')}
-              </button>
-            </div>
-          </div>
-
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -107,7 +70,7 @@ export const Login = ({ onLoginSuccess, onBackToHome }) => {
                 type="email"
                 required
                 className="form-input"
-                placeholder="admin@sakhisetu.org"
+                placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -153,6 +116,14 @@ export const Login = ({ onLoginSuccess, onBackToHome }) => {
             <p style={{ fontSize: '0.8rem', color: '#64748b' }}>
               {t('loginHelperText')}
             </p>
+            <button
+              type="button"
+              onClick={onNavigateRegister}
+              className="btn btn-secondary btn-sm"
+              style={{ marginTop: '12px' }}
+            >
+              {t('registerLink')}
+            </button>
           </div>
         </div>
       </div>

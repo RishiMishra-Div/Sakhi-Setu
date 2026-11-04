@@ -13,6 +13,19 @@ export const getHeaders = () => {
 
 export const api = {
   // Auth
+  register: async (registrationData) => {
+    const res = await fetch(`${API_BASE}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(registrationData)
+    });
+    const contentType = res.headers.get('content-type') || '';
+    const data = contentType.includes('application/json') ? await res.json() : null;
+    if (!res.ok) throw new Error(data?.message || `Server error (${res.status}). Please try again later.`);
+    if (!data) throw new Error('The server returned an unexpected response. Please try again later.');
+    return data;
+  },
+
   login: async (email, password) => {
     const res = await fetch(`${API_BASE}/auth/login`, {
       method: 'POST',
